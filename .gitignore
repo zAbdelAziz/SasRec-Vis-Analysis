@@ -1,0 +1,7 @@
+# macOS Finder metadata (at any directory depth)
+.DS_Store
+
+# Generated Python bytecode
+__pycache__/
+*.pyc
+*.pyo
