@@ -1,0 +1,18 @@
+{
+  "name": "sasrec-visual-analytics",
+  "private": true,
+  "version": "0.4.0",
+  "scripts": {
+    "setup:model": "git clone --depth 1 https://github.com/pmixer/SASRec.pytorch.git src/model/SASRec.pytorch",
+    "setup:mapping": "git clone --depth 1 https://github.com/asash/ml1m-sas-mapping.git src/data/mapping-source",
+    "setup:ui": "npm --prefix src/ui install",
+    "setup:data": "cd src/python-vis && python -m app.setup_data",
+    "dev": "concurrently -k -n api,ui -c cyan,magenta \"python -m uvicorn app.main:app --app-dir src/python-vis --reload --reload-dir src/python-vis/app --port 8000\" \"npm --prefix src/ui run dev\"",
+    "build": "npm --prefix src/ui run build",
+    "typecheck": "npm --prefix src/ui run typecheck",
+    "test:python": "python -m pytest src/python-vis/tests -q -o pythonpath=src/python-vis"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
