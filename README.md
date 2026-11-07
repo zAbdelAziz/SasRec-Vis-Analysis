@@ -27,8 +27,6 @@ Open `http://localhost:5173`. The API is at `http://localhost:8000/docs`. For th
 | **H2** (`h2`) | Mean release-year shifts, and decade mixes for history/recommendations/catalog | Cosine alignment of final contextual user state with candidate movie embeddings by decade; candidate-weighted ranking-score advantage |
 | **H3** (`h3`) | Genre amplification by age and gender | Post-hoc genre reference alignment from learned vectors; actual final-query causal attention to historical genres; age/gender user-level bootstrap intervals; linked, same-cohort Phase I comparison. |
 
-**H3 research Phase II requires a fresh run.** The previous age-accuracy investigation used a different methodology and its saved result has been separated under `docs/legacy/h3-previous-age-accuracy/`. It is deliberately not displayed as internal genre-alignment evidence.
-
 ## Using the app
 
 Choose a hypothesis and research phase. Pair A and Pair B are independent result namespaces; defaults use random seeds **42** and **1042**. Both research phases use verified item mappings and metadata. The full-width pages prioritize coordinated charts; run/reload controls and an always-visible methodology panel are at the bottom. Missing Pair B results are shown as missing, not copied from Pair A.
