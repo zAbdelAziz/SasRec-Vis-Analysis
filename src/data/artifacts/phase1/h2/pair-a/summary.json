@@ -4413,7 +4413,7 @@
         {
           "item_id": 20,
           "original_movie_id": 2324,
-          "title": "Life Is Beautiful (La Vita è bella) (1997)",
+          "title": "Life Is Beautiful (La Vita \u00e8 bella) (1997)",
           "genres": [
             "Comedy",
             "Drama"
@@ -6185,7 +6185,7 @@
         {
           "item_id": 1809,
           "original_movie_id": 3799,
-          "title": "Pokémon the Movie 2000 (2000)",
+          "title": "Pok\u00e9mon the Movie 2000 (2000)",
           "genres": [
             "Animation",
             "Children's"
@@ -8073,7 +8073,7 @@
         {
           "item_id": 20,
           "original_movie_id": 2324,
-          "title": "Life Is Beautiful (La Vita è bella) (1997)",
+          "title": "Life Is Beautiful (La Vita \u00e8 bella) (1997)",
           "genres": [
             "Comedy",
             "Drama"
@@ -9832,7 +9832,7 @@
         {
           "item_id": 2368,
           "original_movie_id": 1176,
-          "title": "Double Life of Veronique, The (La Double Vie de Véronique) (1991)",
+          "title": "Double Life of Veronique, The (La Double Vie de V\u00e9ronique) (1991)",
           "genres": [
             "Drama"
           ],
@@ -10266,7 +10266,7 @@
         {
           "item_id": 2034,
           "original_movie_id": 73,
-          "title": "Misérables, Les (1995)",
+          "title": "Mis\u00e9rables, Les (1995)",
           "genres": [
             "Drama",
             "Musical"
@@ -10449,7 +10449,7 @@
         {
           "item_id": 276,
           "original_movie_id": 1873,
-          "title": "Misérables, Les (1998)",
+          "title": "Mis\u00e9rables, Les (1998)",
           "genres": [
             "Drama"
           ],
@@ -11712,30 +11712,28 @@
     "top_k": 20,
     "max_examples": 8,
     "seed": 42,
-    "demographic": "gender",
     "history_window": 20,
     "attention_layer": 0,
     "attention_head": -1
   },
-  "run_id": "350213e24f98df0d",
+  "run_id": "98686ff4dd47cb0f",
   "status": "complete",
-  "created_at": "2026-11-04T13:19:44.328755+00:00",
+  "created_at": "2026-11-07T15:20:43.316554+00:00",
   "provenance": {
     "revision": "phase3-ui-fixes-2026-10-30",
-    "hypothesis": "h8",
+    "hypothesis": "h2",
     "phase": 1,
     "pair": "a",
     "model": "5e3af2278df2092c09f02b3f817469f834e93450ed6c14abe35e75ce9a60d1ed",
     "data": {
       "size": 9053831,
-      "mtime_ns": 1793385227000000000
+      "mtime_ns": 1793982460000000000
     },
     "parameters": {
       "max_users": 40,
       "top_k": 20,
       "max_examples": 8,
       "seed": 42,
-      "demographic": "gender",
       "history_window": 20,
       "attention_layer": 0,
       "attention_head": -1
@@ -11745,12 +11743,5 @@
   "measures": {
     "observations": 80,
     "saved_examples": 8
-  },
-  "migration": {
-    "source_hypothesis": "h8",
-    "target_hypothesis": "h2",
-    "original_run_id": "350213e24f98df0d",
-    "numeric_results": "unchanged",
-    "method": "identifier-only-artifact-migration-v1"
   }
 }
