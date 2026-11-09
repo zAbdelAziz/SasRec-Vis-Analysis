@@ -1,0 +1,2 @@
+users,recommendation_q5_share_higher,recommendation_q5_share_same,recommendation_q5_share_lower,higher_percent,same_percent,lower_percent,mean_recommendation_minus_history_q5_share,mean_shift_ci_low,mean_shift_ci_high,median_history_q5_share,median_recommendation_q5_share
+6040,3322,570,2148,55.00000000000001,9.437086092715232,35.562913907284766,0.03632285309267194,0.031352483415232016,0.04139302048663081,0.65,0.7

@@ -1,0 +1,70 @@
+# AI Interaction Record — Phase I (AI-assisted pair)
+
+## Project context
+
+Team: Cosmic Mirage. Model/task: the shared SASRec checkpoint predicts a user's next MovieLens 1M interaction. This record begins with the rebuilt Phase I workflow using that checkpoint.
+
+## Entry 1 — Restart Phase I on the shared checkpoint
+
+**User prompt:** “Let's rebuild our pair's phase 1 based on all this knowledge? Give me outline before worki g”. Follow-up: the only available shared setup is the other pair's GitHub repository; use its model/checkpoint resources, and start the AI interaction record from scratch.
+
+**AI plan and implementation:** Proposed one common model/data protocol and a distinct AI-pair analysis. Implemented the analysis in `phase1_behavior_analysis.ipynb`. Research question: **How does SASRec change the genre and popularity profile of a user's recent interaction history in its Top-20 recommendations, and how sensitive are those recommendations to the arbitrary order of same-second events?**
+
+**Sources inspected:** Shared repository `https://github.com/zAbdelAziz/SasRec-Vis-Analysis` at commit `77f86a63af24c83ddd34a5b187a88debaa8ee67f`; upstream SASRec implementation at commit `26a8fa880f312c3700f8dcca5512d5854b257f4e`. The repository supplies the checkpoint, architecture arguments, raw MovieLens files, and SASRec-to-MovieLens ID maps. The upstream processed sequence is `src/model/SASRec.pytorch/python/data/ml-1m.txt`.
+
+**Data and timestamp audit:** Applied the one-pass 5-core filter and mapped the raw IDs into SASRec's item/user IDs. For all 6,040 users, sorting by timestamp and original raw-file row for equal timestamps exactly reproduces the processed sequences supplied with the checkpoint. The filtered data has 999,611 events, 6,040 users, and 3,416 movies. There are 244,895 tied user-timestamp groups out of 470,957; 773,549 events belong to tied groups. 2,544 users have a tied latest timestamp, with a maximum group size of 18.
+
+**Model setup:** Loaded the shared checkpoint without retraining, using the matching upstream implementation and checkpoint arguments: maximum sequence length 200, 50 hidden units, two blocks, one head, dropout 0.2. Inference ran on CPU. Checkpoint SHA-256: `5e3af2278df2092c09f02b3f817469f834e93450ed6c14abe35e75ce9a60d1ed`.
+
+**Accepted analysis decisions:** Score all 3,416 movies for every eligible user and exclude training-seen movies from recommendation lists. Compare each user's latest 20 training interactions with their Top-20 recommendations using fractional multi-label genre shares. Use each user's unseen catalog and a training-popularity Top-20 as reference lists. Add popularity-quintile exposure, release-year, and demographic summaries as secondary views. Evaluate the final held-out event against 100 deterministic sampled negatives only as a protocol sanity check. For the timestamp stress test, reverse events only within equal-timestamp blocks in the model-visible training context; preserve the item set and candidate set. This is an inference-time sensitivity test, not a claim that reversed order is true chronology.
+
+**Implementation failures and revisions:** An initial complete notebook run stalled in repeated Pandas label lookups for each user's unseen catalog. Interrupted it and changed release-year lookups to a NumPy array and the popularity baseline to a precomputed ranking. A first tie-count visualization grouped 6,025 users into “2+ ties,” obscuring differences; changed it to readable count bands. A demographic line chart used numeric age codes and omitted visible intervals, so it was removed from the main figures; cohort estimates remain in a supplemental table with user-level bootstrap intervals.
+
+## Entry 2 — Completed Phase I run and interpretation
+
+**Main outputs:** The notebook ran for all 6,040 users. The sampled-negative sanity check was Hit@10 = 0.8262 and NDCG@10 = 0.5973. It is separated from the main behavioral claims.
+
+- **Popularity exposure:** Movies in the highest training-popularity rank quintile account for 67.7% of SASRec recommendation slots, versus 17.7% of the average user's unseen-catalog items. The pure popularity Top-20 is 100% in this quintile by construction. SASRec still recommends 2,908 of 3,416 movies (85.1% catalog coverage); the top 1% of movies by exposure receives 13.7% of slots and the top 5% receives 38.9%. This suggests popularity-skewed exposure without recommendations collapsing to a handful of titles.
+- **Genre change:** Comedy share rises by 1.35 percentage points from latest-20 history to Top-20 recommendations (95% user-bootstrap interval: +1.02 to +1.67 points). Adventure decreases by 0.61 points (interval: −0.71 to −0.50). Comparisons with each user's unseen catalog are retained in the output table; these are descriptive profile changes, not satisfaction measures.
+- **Hits by target popularity:** Under one test event per user and 100 sampled unseen negatives, Hit@10 ranges from 30.5% for Q1-rare targets (131 users) to 90.4% for Q5-popular targets (3,525 users). This is a sampled-candidate diagnostic, conditional on the inherited event order; Q1 has much less support.
+- **Same-second order sensitivity:** Reversing within-timestamp groups changes at least one item in the Top-20 for 4,320/6,040 users (71.5%). Among users with 1–10 tied groups in their visible history, mean Top-20 RBO dissimilarity is 0.176 (95% user-bootstrap interval: 0.167–0.186); it is 0.182 for 11–23 groups, 0.167 for 24–41, and 0.163 for 42+. The effect is substantial but not monotonic in tie count. Only three users have no tied groups in the visible history, so that comparison is not inferential. The perturbation is broad and should be described as a stress test of order sensitivity, not a realistic alternate dataset or proof that the stored order is wrong.
+
+**AI contribution and limits:** AI assistance proposed the paired profile comparisons, the tie-order sensitivity stress test, and the initial plot/summary plan; code was adapted after inspecting the repository's exact sequence and after finding slow loops and uninformative tie bins. The model's internals were not inspected. Bootstrap intervals quantify user-to-user uncertainty for these observed profiles; they do not remove confounding or establish causes.
+
+## Entry 3 — Deepen Phase I with user-level follow-ups
+
+**User prompt:** “Based on that finish phase 1 completely.” The agreed follow-up was to examine which users or histories show stronger popularity and tie-order effects.
+
+**Analysis added:** Compared each user's share of recommendations from the most popular item quintile (Q5) with that user's Q5 share of the unseen catalog. Grouped users into thirds by effective number of genres in their latest 20 interactions. This quantifies how evenly the recent history is spread across genres. Also grouped users by the number of movies in the latest timestamp block that was actually visible to the model, and summarized sensitivity to reversing within-second order using Top-20 RBO dissimilarity and whether any Top-20 membership changed. User bootstrap confidence intervals are reported. These are descriptive subgroup comparisons, not causal explanations.
+
+**Findings:** The Q5 recommendation share was 60.0% for the narrowest recent-genre profiles, 69.8% for the middle third, and 73.1% for the broadest. The corresponding Q5 shares of the unseen catalog were 17.7%, 17.8%, and 17.8%. Thus, the broad-minus-narrow difference in recommendation-minus-availability exposure gap is 13.0 percentage points (95% user-bootstrap CI: 11.3–14.6). Across individual users, recent genre diversity has a modest positive Spearman association with this gap (ρ = 0.189). Genre diversity is associated with a stronger popularity skew, but it does not explain most user-to-user variation and should not be framed as a cause.
+
+For the same-second reversal stress test, the latest-timestamp group was computed from each model-visible training prefix (excluding validation and test events). If that latest group contains one movie, mean RBO dissimilarity is 0.045 and 51.2% change at least one Top-20 item. With latest groups of 2, 3, and 4+ movies, mean RBO is 0.346, 0.344, and 0.348, while Top-20 membership changes for 99.1%, 99.4%, and 99.1%. This separates “no tie at the latest visible time” from “a tie at that time”; it is not a dose-response by tie size. Even the one-movie group has an average of 27.3 older tied groups, all reversed in the stress test. The result does not establish a historically correct order.
+
+**AI contribution, failure, and revision:** AI proposed stratifying on recent-history genre diversity and the immediately latest tie block so the analysis connected aggregate patterns to user groups. The first draft mistakenly used the latest timestamp group from the full sequence, which can include validation and test events. A time-scope check caught that the subgroup did not match the training-only sensitivity input. We discarded the initial tie-size comparison and recomputed the groups strictly from the model-visible training prefix. This changed the result substantially. The corrected notebook distinguishes the full-sequence timestamp metadata from the model-visible tie size. Interpretation remains descriptive; it does not claim causation or recover true within-second order.
+
+**Added outputs:** `popularity_by_history_genre_diversity.png` and `.csv`; `sensitivity_by_latest_tie_size.png` and `.csv`; `visible_latest_timestamp_tie_size.csv`. Notebook section 8 contains the reproducible follow-up analysis. The original overall figures and tables are retained.
+
+**Phase I status:** Complete as a black-box behavioral analysis: it establishes an aggregate popularity skew, identifies associated recent-history profile differences, documents genre-profile shifts, and measures recommendation sensitivity to the timestamp tie policy. Phase II can now investigate learned representations or explanations for these observed behaviors.
+
+## Entry 4 — Plot the popularity profile of both input and output
+
+**User prompt:** After reviewing the Phase I lecture slide, the user agreed to add a direct visualization of input and output popularity profiles.
+
+**Change:** Updated the existing popularity chart to compare each user's latest up to 20 training interactions (input), the unseen catalog (available choices), and the model's full-catalog Top-20 recommendations (output), across the same five training-popularity quintiles. The popularity quintile definitions still use training-prefix interaction counts. Added `latest20_history_share` to the user-level popularity table and saved a compact group-summary CSV.
+
+**Finding:** Q5 movies make up 64.0% of users' recent histories (up to 20 interactions) and 67.7% of SASRec's recommendations. The mean paired increase from input to output is 3.6 percentage points (95% user-bootstrap CI: 3.1–4.1). Q5 items are only 17.7% of the unseen catalog. This makes the interpretation more precise: the model's recommendations are heavily skewed toward popular items relative to availability, while input histories are already popularity-skewed and the additional increase from recent history to output is smaller. The comparison is descriptive; history items have been seen and are ineligible for recommendation.
+
+**AI contribution:** AI recommended this direct input-to-output comparison after noting that the existing popularity chart showed recommendation exposure versus catalog availability but omitted the popularity profile of the model's recent input. The user accepted the suggestion. The existing genre-profile visualization already compares recent history with recommendations; the revised popularity figure adds the same input/output comparison for item popularity.
+
+**Updated outputs:** `recommendation_popularity_profile.png`, `user_popularity_exposure.csv`, and `popularity_history_to_recommendation_summary.csv`.
+
+## Entry 5 — Show user-level variation, not only group averages
+
+**User prompt:** The user asked whether Phase I should include more visualization variety because the figures felt too bar-chart-heavy.
+
+**AI review and decision:** Review showed that the analysis already included point-and-interval plots and a line plot, but its main popularity comparisons were aggregate bars. AI recommended a per-user density plot of Q5 share in recent history versus Q5 share in Top-20 recommendations, with a no-change diagonal. This adds a different view for an analytical reason: it reveals how consistently the average increase applies to individual users. The user agreed to add the chart.
+
+**Finding:** Among 6,040 users, the recommendation list has a higher Q5 share than recent history for 3,322 users (55.0%), the same share for 570 (9.4%), and a lower share for 2,148 (35.6%). The paired mean increase is 3.6 percentage points (95% user-bootstrap CI: 3.1–4.1). Thus, the overall increase is not universal: more than a third of users receive a Top-20 with a smaller Q5 share than their recent input history.
+
+**Added outputs:** `q5_user_input_output_density.png` and `q5_user_level_shift_summary.csv`. The notebook includes the reproducible hexbin plot and summary calculation.
