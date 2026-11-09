@@ -1,0 +1,23 @@
+{
+  "checkpoint_sha256": "5e3af2278df2092c09f02b3f817469f834e93450ed6c14abe35e75ce9a60d1ed",
+  "repo_commit": "77f86a63af24c83ddd34a5b187a88debaa8ee67f",
+  "upstream_model_commit": "26a8fa880f312c3700f8dcca5512d5854b257f4e",
+  "interactions": 999611,
+  "users": 6040,
+  "items": 3416,
+  "sequence_matches": 6040,
+  "test_users": 6040,
+  "top_k": 20,
+  "model_maxlen": 200,
+  "sampled_negative_count": 100,
+  "sampled_negative_hit_at_10": 0.8261589403973509,
+  "sampled_negative_ndcg_at_10": 0.5973252469806931,
+  "users_with_latest_timestamp_tie": 2544,
+  "users_with_visible_training_ties": 6037,
+  "unique_recommended_items": 2908,
+  "catalog_coverage": 0.8512880562060889,
+  "top_1pct_catalog_exposure_share": 0.13731788079470197,
+  "top_5pct_catalog_exposure_share": 0.3892301324503311,
+  "most_recommended_item_slot_share": 0.006846026490066225,
+  "tie_sensitivity_order": "reverse events within each equal-timestamp group in the last 200 training events; same item set and candidates"
+}
