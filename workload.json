@@ -1,0 +1,25 @@
+{
+    "team_name": "Cosmic Mirage",
+    "students": [
+        {
+            "first_name": "Nikita",
+            "last_name": "Tymofieiev",
+            "workload": null
+        },
+        {
+            "first_name": "Mohamed",
+            "last_name": "Abdelaziz",
+            "workload": null
+        },
+        {
+            "first_name": "Kseniia",
+            "last_name": "Leonteva",
+            "workload": null
+        },
+        {
+            "first_name": "Timur",
+            "last_name": "Ibragimov",
+            "workload": null
+        }
+    ]
+} 

@@ -1,0 +1,33 @@
+{
+    "team_name": "Cosmic Mirage",
+    "students": [
+        {
+            "student_id": "K12133178",
+            "first_name": "Nikita",
+            "last_name": "Tymofieiev",
+            "email": "nikita.app@icloud.com",
+            "github_user": "timoniko"
+        },
+        {
+            "student_id": null,
+            "first_name": "Mohamed Abdelaziz",
+            "last_name": null,
+            "email": null,
+            "github_user": null
+        },
+        {
+            "student_id": null,
+            "first_name": "Kseniia Leonteva",
+            "last_name": null,
+            "email": null,
+            "github_user": null
+        },
+        {
+            "student_id": null,
+            "first_name": "Timur Ibragimov",
+            "last_name": null,
+            "email": null,
+            "github_user": null
+        }
+    ]
+}
