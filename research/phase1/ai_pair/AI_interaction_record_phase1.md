@@ -58,3 +58,13 @@ For the same-second reversal stress test, the latest-timestamp group was compute
 **AI contribution:** AI recommended this direct input-to-output comparison after noting that the existing popularity chart showed recommendation exposure versus catalog availability but omitted the popularity profile of the model's recent input. The user accepted the suggestion. The existing genre-profile visualization already compares recent history with recommendations; the revised popularity figure adds the same input/output comparison for item popularity.
 
 **Updated outputs:** `recommendation_popularity_profile.png`, `user_popularity_exposure.csv`, and `popularity_history_to_recommendation_summary.csv`.
+
+## Entry 5 — Show user-level variation, not only group averages
+
+**User prompt:** The user asked whether Phase I should include more visualization variety because the figures felt too bar-chart-heavy.
+
+**AI review and decision:** Review showed that the analysis already included point-and-interval plots and a line plot, but its main popularity comparisons were aggregate bars. AI recommended a per-user density plot of Q5 share in recent history versus Q5 share in Top-20 recommendations, with a no-change diagonal. This adds a different view for an analytical reason: it reveals how consistently the average increase applies to individual users. The user agreed to add the chart.
+
+**Finding:** Among 6,040 users, the recommendation list has a higher Q5 share than recent history for 3,322 users (55.0%), the same share for 570 (9.4%), and a lower share for 2,148 (35.6%). The paired mean increase is 3.6 percentage points (95% user-bootstrap CI: 3.1–4.1). Thus, the overall increase is not universal: more than a third of users receive a Top-20 with a smaller Q5 share than their recent input history.
+
+**Added outputs:** `q5_user_input_output_density.png` and `q5_user_level_shift_summary.csv`. The notebook includes the reproducible hexbin plot and summary calculation.
