@@ -46,3 +46,15 @@ For the same-second reversal stress test, the latest-timestamp group was compute
 **Added outputs:** `popularity_by_history_genre_diversity.png` and `.csv`; `sensitivity_by_latest_tie_size.png` and `.csv`; `visible_latest_timestamp_tie_size.csv`. Notebook section 8 contains the reproducible follow-up analysis. The original overall figures and tables are retained.
 
 **Phase I status:** Complete as a black-box behavioral analysis: it establishes an aggregate popularity skew, identifies associated recent-history profile differences, documents genre-profile shifts, and measures recommendation sensitivity to the timestamp tie policy. Phase II can now investigate learned representations or explanations for these observed behaviors.
+
+## Entry 4 — Plot the popularity profile of both input and output
+
+**User prompt:** After reviewing the Phase I lecture slide, the user agreed to add a direct visualization of input and output popularity profiles.
+
+**Change:** Updated the existing popularity chart to compare each user's latest up to 20 training interactions (input), the unseen catalog (available choices), and the model's full-catalog Top-20 recommendations (output), across the same five training-popularity quintiles. The popularity quintile definitions still use training-prefix interaction counts. Added `latest20_history_share` to the user-level popularity table and saved a compact group-summary CSV.
+
+**Finding:** Q5 movies make up 64.0% of users' recent histories (up to 20 interactions) and 67.7% of SASRec's recommendations. The mean paired increase from input to output is 3.6 percentage points (95% user-bootstrap CI: 3.1–4.1). Q5 items are only 17.7% of the unseen catalog. This makes the interpretation more precise: the model's recommendations are heavily skewed toward popular items relative to availability, while input histories are already popularity-skewed and the additional increase from recent history to output is smaller. The comparison is descriptive; history items have been seen and are ineligible for recommendation.
+
+**AI contribution:** AI recommended this direct input-to-output comparison after noting that the existing popularity chart showed recommendation exposure versus catalog availability but omitted the popularity profile of the model's recent input. The user accepted the suggestion. The existing genre-profile visualization already compares recent history with recommendations; the revised popularity figure adds the same input/output comparison for item popularity.
+
+**Updated outputs:** `recommendation_popularity_profile.png`, `user_popularity_exposure.csv`, and `popularity_history_to_recommendation_summary.csv`.
