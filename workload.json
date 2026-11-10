@@ -13,13 +13,13 @@
         },
         {
             "first_name": "Kseniia",
-            "last_name": "Leonteva",
-            "workload": null
+            "last_name": "Leontyeva",
+            "workload": 0.25
         },
         {
             "first_name": "Timur",
             "last_name": "Ibragimov",
-            "workload": null
+            "workload": 0.25
         }
     ]
 } 
