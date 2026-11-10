@@ -4,12 +4,12 @@
         {
             "first_name": "Nikita",
             "last_name": "Tymofieiev",
-            "workload": null
+            "workload": 0.25
         },
         {
             "first_name": "Mohamed",
             "last_name": "Abdelaziz",
-            "workload": null
+            "workload": 0.25
         },
         {
             "first_name": "Kseniia",
