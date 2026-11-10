@@ -5,7 +5,7 @@ This folder contains the rebuilt Phase I analysis using the checkpoint and ID ma
 ## Files
 
 - `phase1_behavior_analysis.ipynb` — end-to-end data audit, full-catalog recommendations, behavior analysis, and plots.
-- `AI_interaction_record_phase1.md` — fresh interaction record for this rebuilt Phase I workflow.
+- `../../../ai-interactions/phase1_ai_pair.md` — interaction record for this Phase I workflow.
 - `outputs/` — generated plots, user-level analysis tables, recommendation records, and run metadata.
 
 The main Phase I story compares popularity profiles in each user's recent history (up to 20 training interactions), the unseen catalog, and recommendations, alongside the controlled same-second-order sensitivity analysis. Q1–Q5 are five equal-sized item groups ranked by training interaction counts. The user-level paired input/output increase for Q5 is 3.6 percentage points on average (95% bootstrap CI: 3.1–4.1). The genre-profile shift provides a complementary view. Follow-up comparisons examine popularity exposure by recent-history genre diversity and tie-order sensitivity by the size of the latest visible timestamp group. Release-year profiles and sampled-negative hit rates are supporting descriptive and protocol checks, respectively; they are not the main behavioral claims.

@@ -2,6 +2,10 @@
 
 React + FastAPI visual analytics for MovieLens-1M and a trained SASRec checkpoint. There are **three active hypotheses** (`h1`, `h2`, `h3`), each with a behavioral **research Phase I** and an internal-model **research Phase II**. The application never fabricates model outputs to fill missing results.
 
+## Course project context
+
+The model is SASRec, used for next-item prediction on the MovieLens-1M interaction dataset. Phase I investigates observable recommendation behavior; Phase II examines the model's learned representations and attention. The AI-assisted pair's Phase I analysis and interaction record are in `research/phase1/ai_pair/` and `ai-interactions/`, respectively.
+
 ## Quick setup
 
 Requires Python 3.11+, Node.js 22+, Git, a compatible SASRec checkpoint, the original processed interaction data, and verified MovieLens mapping/metadata. From the repository root:
