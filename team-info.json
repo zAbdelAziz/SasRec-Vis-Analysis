@@ -16,18 +16,18 @@
             "github_user": "mohamed-aziz"
         },
         {
-            "student_id": null,
+            "student_id": "K12136772",
             "first_name": "Kseniia",
             "last_name": "Leonteva",
-            "email": null,
-            "github_user": null
+            "email": "ksenialeontyeva@gmail.com",
+            "github_user": "Ksenia0707"
         },
         {
-            "student_id": null,
+            "student_id": "K12127091",
             "first_name": "Timur",
             "last_name": "Ibragimov",
-            "email": null,
-            "github_user": null
+            "email": "t.ibragimov20@yandex.ru",
+            "github_user": "TimDev-r"
         }
     ]
 }
