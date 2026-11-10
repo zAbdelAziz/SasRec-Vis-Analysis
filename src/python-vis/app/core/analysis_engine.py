@@ -9,10 +9,12 @@ from app.core.analysis_data import AnalysisData, AnalysisPrerequisite
 from app.core.artifact_store import ArtifactStore
 from app.core.ranker import Ranker
 from app.core.model_adapter import ModelNotReadyError
+from app.core.notebook_results import NotebookResearch
+from app.core.research_registry import AVAILABILITY, validate, is_notebook
 
 
 class AnalysisEngine:
-    ALLOWED = {'h1', 'h2', 'h3'}
+    ALLOWED = set(AVAILABILITY)
 
     def __init__(self, data, model):
         self.repository = data
@@ -20,10 +22,17 @@ class AnalysisEngine:
         self.data = AnalysisData(data)
         self.ranker = Ranker(model, self.data)
         self.store = ArtifactStore(data.settings.artifacts)
+        self.notebook = NotebookResearch(data.settings.project_root)
 
     def readiness(self, hypothesis=None):
         if hypothesis and hypothesis not in self.ALLOWED:
             raise ValueError('Unknown hypothesis')
+        if hypothesis in ('h4', 'h5'):
+            available = self.notebook.available
+            return {'ready': available, 'model_ready': False, 'data_ready': available,
+                    'metadata_ready': available, 'hypothesis': hypothesis,
+                    'requires_metadata': False, 'metadata_state': 'original_notebook',
+                    'metadata_message': 'Read-only original notebook exports'}
         model_ready = self.model.status()['ready']
         data_ready = self.repository.available
         requires_metadata = hypothesis in {'h1', 'h2', 'h3'}
@@ -52,6 +61,10 @@ class AnalysisEngine:
 
     def run(self, hypothesis, phase, pair, values=None, progress=None):
         self._validate(hypothesis, phase, pair)
+        if is_notebook(hypothesis, phase, pair):
+            raise AnalysisPrerequisite(
+                'Original Pair B notebook outputs are available read-only. '
+                'Full notebook recomputation uses POST /api/research/phase1/pair-b/run.')
         if not self.model.status()['ready']:
             raise ModelNotReadyError('Load a locally trained checkpoint before running model analyses')
         if not self.repository.available:
@@ -106,6 +119,8 @@ class AnalysisEngine:
 
     def results(self, hypothesis, phase, pair):
         self._validate(hypothesis, phase, pair)
+        if is_notebook(hypothesis, phase, pair):
+            return self.notebook.result(hypothesis) if self.notebook.available else None
         result = self.store.load(hypothesis, phase, pair)
         if result is not None:
             origin = result.get('provenance', {})
@@ -123,5 +138,4 @@ class AnalysisEngine:
         return result
 
     def _validate(self, hypothesis, phase, pair):
-        if hypothesis not in self.ALLOWED or phase not in (1, 2) or pair not in ('a', 'b'):
-            raise ValueError('Invalid hypothesis, phase, or pair')
+        validate(hypothesis, phase, pair)

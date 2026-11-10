@@ -1,4 +1,4 @@
-import type { AppStatus, Evaluation, Recommendation, UserHistory, ModelStatus, AnalysisResult, JobStatus, AnalysisReadiness, MovieDetails } from '../types/api';
+import type { AppStatus, Evaluation, Recommendation, UserHistory, ModelStatus, AnalysisResult, JobStatus, AnalysisReadiness, MovieDetails, NotebookNotes, NotebookPrompts, ResearchManifest, NotebookTable, NotebookUserDetail, NotebookRunReadiness } from '../types/api';
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -24,6 +24,25 @@ class ApiClient {
     return response.json() as Promise<T>;
   }
 
+  researchAvailability() { return this.request<Record<string, Record<string, string[]>>>('/research/availability'); }
+  notebookManifest() { return this.request<ResearchManifest>('/research/phase1/pair-b/manifest'); }
+  notebookNotes() { return this.request<NotebookNotes>('/research/phase1/pair-b/notebook/notes'); }
+  notebookPrompts() { return this.request<NotebookPrompts>('/research/phase1/pair-b/prompts'); }
+  notebookTable(name: string, options: { offset?: number; limit?: number; user_id?: number; genre?: string } = {}) {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(options)) if (value !== undefined) params.set(key, String(value));
+    return this.request<NotebookTable>(`/research/phase1/pair-b/tables/${encodeURIComponent(name)}?${params}`);
+  }
+  notebookUserDetail(hypothesis: string, userId: number, runId?: string) {
+    const params = new URLSearchParams();
+    if (runId) params.set('run_id', runId);
+    return this.request<NotebookUserDetail>(`/research/phase1/pair-b/users/${hypothesis}/${userId}?${params}`);
+  }
+  notebookRunReadiness() { return this.request<NotebookRunReadiness>('/research/phase1/pair-b/run/readiness'); }
+  runFullNotebook() { return this.request<JobStatus>('/research/phase1/pair-b/run', { method: 'POST' }); }
+  notebookGeneratedResults(runId: string, hypothesis: string) {
+    return this.request<AnalysisResult>(`/research/phase1/pair-b/runs/${runId}/results/${hypothesis}`);
+  }
   analysisReadiness() { return this.request<Record<string, AnalysisReadiness>>('/analyses/status'); }
   analysisResults(id: string, phase: 1 | 2, pair: 'a' | 'b') {
     return this.request<AnalysisResult>(`/analyses/${id}/results?phase=${phase}&pair=${pair}`);

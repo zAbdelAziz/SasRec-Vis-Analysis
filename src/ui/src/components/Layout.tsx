@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { api } from '../api/client';
-import { hypotheses } from '../content/hypotheses';
+import { hypotheses, hypothesisGroups } from '../content/hypotheses';
 import type { AppStatus } from '../types/api';
 
 export type LayoutContext = { status: AppStatus | null; error: string | null; refresh: () => Promise<void> };
@@ -25,10 +25,14 @@ export default function Layout() {
       </div>
       <nav aria-label="Main navigation" className="flex w-full gap-1 overflow-x-auto px-4 pb-2 md:px-7">
         <NavLink to="/" end className={({ isActive }) => `nav-item ${isActive ? 'nav-active' : ''}`}>Overview</NavLink>
-        {hypotheses.map((hypothesis) => <NavLink to={`/hypotheses/${hypothesis.id}`} key={hypothesis.id}
-          className={({ isActive }) => `nav-item ${isActive ? 'nav-active' : ''}`}>
-          H{Number(hypothesis.accent)} <span className="hidden md:inline">· {hypothesis.short}</span>
-        </NavLink>)}
+        {hypothesisGroups.map(group => <div key={group.id} className="flex shrink-0 items-center gap-1 border-l border-slate-200 pl-3" aria-label={`${group.label} investigations`}>
+          <span className="whitespace-nowrap px-1 text-[11px] font-bold uppercase tracking-wide text-slate-400">{group.label}</span>
+          {hypotheses.filter(hypothesis => hypothesis.group === group.id).map(hypothesis => <NavLink
+            to={`/hypotheses/${hypothesis.id}`} key={hypothesis.id}
+            className={({ isActive }) => `nav-item ${isActive ? 'nav-active' : ''}`}>
+            H{Number(hypothesis.accent)} <span className="hidden lg:inline">· {hypothesis.short}</span>
+          </NavLink>)}
+        </div>)}
       </nav>
     </header>
     <main className="w-full px-4 py-4 md:px-6 md:py-6 2xl:px-8">

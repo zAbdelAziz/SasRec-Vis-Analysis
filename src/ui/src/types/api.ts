@@ -78,3 +78,16 @@ export type JobStatus = { job_id: string; status: 'queued' | 'running' | 'comple
 export type AnalysisReadiness = { ready: boolean; model_ready: boolean; data_ready: boolean; metadata_ready: boolean; requires_metadata: boolean;
   metadata_state?: string; metadata_message?: string; missing_metadata_files?: string[] };
 export type MovieDetails = { verified: boolean; items: Array<{ item_id: number; original_movie_id: number; title: string; genres: string[] }> };
+
+export type NotebookNotes = { source: string; cells: Array<{ index: number; markdown: string }> };
+export type NotebookPrompts = { source: string; markdown: string };
+export type ResearchManifest = { available: boolean; source?: string; tables?: string[]; figures?: string[]; note_cells?: number[]; metadata?: Record<string, unknown>; schema_warnings?: string[] };
+export type NotebookTable = { table: string; columns: string[]; total: number; offset: number; limit: number; rows: RawRow[]; source: string };
+
+export type NotebookUserDetail = {
+  hypothesis: string; user_id: number; source: string; has_detailed_example: boolean;
+  tables: Record<string, RawRow[]>;
+};
+export type NotebookRunReadiness = {
+  ready: boolean; missing_files: string[]; cohort: string; top_k: number; maxlen: number; mode: string;
+};

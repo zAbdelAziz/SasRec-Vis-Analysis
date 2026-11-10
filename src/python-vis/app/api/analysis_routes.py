@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 from app.core.model_adapter import ModelNotReadyError
 from app.core.analysis_data import AnalysisPrerequisite
+from app.core.research_registry import is_notebook
 
 router = APIRouter(prefix='/api')
 
@@ -54,6 +55,9 @@ def example(request: Request, hypothesis: str, example_id: str, phase: int = 1, 
 def run(request: Request, hypothesis: str, body: RunOptions):
     ctx = request.app.state.context
     try:
+        ctx.analysis._validate(hypothesis, body.phase, body.pair)
+        if is_notebook(hypothesis, body.phase, body.pair):
+            raise AnalysisPrerequisite('Full notebook recomputation uses POST /api/research/phase1/pair-b/run with fixed notebook settings; original CSVs remain read-only.')
         readiness = ctx.analysis.readiness(hypothesis)
         if not readiness['ready']:
             raise AnalysisPrerequisite('Model, dataset or verified metadata missing: ' + str(readiness))
