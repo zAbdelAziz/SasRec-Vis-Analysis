@@ -1,0 +1,25 @@
+{
+  "run_id": "eea46756fd5438b3",
+  "source_notebook_sha256": "817063940ad86ba01317d4a005c05330f328519611c6c7e3ad5f1b04322276d1",
+  "checkpoint_sha256": "5e3af2278df2092c09f02b3f817469f834e93450ed6c14abe35e75ce9a60d1ed",
+  "generated_at": "2026-11-10T15:39:30.085232+00:00",
+  "method": "executed unchanged original notebook code cells",
+  "cells": [
+    3,
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    16,
+    18,
+    19,
+    20,
+    21,
+    22,
+    24,
+    26
+  ],
+  "original_research_modified": false
+}

@@ -8,15 +8,17 @@ export default function ResearchMaterials() {
   const [prompts, setPrompts] = useState<NotebookPrompts | null>(null);
   const [showPrompts, setShowPrompts] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [error, setError] = useState('');
+  const [notesError, setNotesError] = useState('');
+  const [promptsError, setPromptsError] = useState('');
   useEffect(() => {
-    void api.notebookNotes().then(setNotes).catch((cause: Error) => setError(cause.message));
+    void api.notebookNotes().then(setNotes).catch((cause: Error) => setNotesError(cause.message));
   }, []);
   async function openPrompts() {
     setShowPrompts(true);
     if (prompts) return;
+    setPromptsError('');
     try { setPrompts(await api.notebookPrompts()); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : 'Unable to load the prompt record'); }
+    catch (cause) { setPromptsError(cause instanceof Error ? cause.message : 'Unable to load the prompt record'); }
   }
   return <>
     <section className="surface min-w-0 p-4 lg:p-5" aria-label="Research notes">
@@ -27,11 +29,11 @@ export default function ResearchMaterials() {
         </div>
         <button className="btn-muted" type="button" onClick={() => void openPrompts()}>Phase I Prompts</button>
       </div>
-      {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+      {notesError && <p role="alert" className="text-sm text-red-700">{notesError}</p>}
       <div className="max-h-[30rem] space-y-5 overflow-y-auto pr-2">
         {notes ? notes.cells.map(cell => <div key={cell.index} className="border-b border-slate-100 pb-4 last:border-0">
           <ResearchMarkdown markdown={cell.markdown} />
-        </div>) : <p className="text-sm text-slate-500">Loading research notes…</p>}
+        </div>) : !notesError && <p className="text-sm text-slate-500">Loading research notes…</p>}
       </div>
     </section>
     {showPrompts && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-3 md:p-7" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setShowPrompts(false); }}>
@@ -43,7 +45,7 @@ export default function ResearchMaterials() {
           </div>
           <div className="flex gap-2">
             <button type="button" className="btn-muted" disabled={!prompts} onClick={() => {
-              if (prompts) void navigator.clipboard.writeText(prompts.markdown).then(() => setCopied(true)).catch(() => setError('Unable to copy text'));
+              if (prompts) void navigator.clipboard.writeText(prompts.markdown).then(() => setCopied(true)).catch(() => setPromptsError('Unable to copy text'));
             }}>{copied ? 'Copied' : 'Copy full text'}</button>
             <button type="button" className="btn-muted" onClick={() => setShowPrompts(false)}>Close</button>
           </div>
@@ -56,8 +58,8 @@ export default function ResearchMaterials() {
             </button>)}
           </nav>
           <div className="min-h-0 flex-1 overflow-y-auto pr-2">
-            {prompts ? <ResearchMarkdown markdown={prompts.markdown} /> : <p className="text-sm text-slate-500">Loading prompts…</p>}
-            {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+            {prompts ? <ResearchMarkdown markdown={prompts.markdown} /> : !promptsError && <p className="text-sm text-slate-500">Loading prompts…</p>}
+            {promptsError && <p role="alert" className="text-sm text-red-700">{promptsError}</p>}
           </div>
         </div>
       </section>

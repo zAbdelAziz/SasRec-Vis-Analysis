@@ -55,7 +55,7 @@ export default function ReleaseYearDistributionRows({ records, selectedUser, onS
     recommendations: { x: [], y: [], text: [], ids: [] },
   };
 
-  const labelValues = records.map((row, index) => records.length - 1 - index);
+  const labelValues = records.map((_, index) => records.length - 1 - index);
   records.forEach((row, index) => {
     const center = labelValues[index];
     const selected = row.user_id === selectedUser;

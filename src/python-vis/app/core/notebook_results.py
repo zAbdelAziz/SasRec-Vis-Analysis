@@ -46,6 +46,8 @@ class NotebookResearch:
     def __init__(self, project_root: Path, *, run_id: str | None = None):
         self.project_root = Path(project_root)
         self.folder = self.project_root / 'research/phase1/ai_pair'
+        self.notebook_path = self.folder / 'phase1_behavior_analysis.ipynb'
+        self.prompts_path = self.project_root / 'ai-interactions/phase1_ai_pair.md'
         self.run_id = run_id
         if run_id is not None:
             if not re.fullmatch(r'[0-9a-f]{16}', run_id):
@@ -56,8 +58,8 @@ class NotebookResearch:
 
     @property
     def available(self) -> bool:
-        required = ('phase1_behavior_analysis.ipynb', 'AI_interaction_record_phase1.md')
-        return all((self.folder / name).is_file() for name in required) and all(
+        # Saved results do not depend on the notebook or its prompt record.
+        return all(
             (self.outputs / f'{name}.csv').is_file() for name in TABLES) and (
             self.outputs / 'phase1_run_metadata.json').is_file()
 
@@ -66,12 +68,12 @@ class NotebookResearch:
         return json.loads((self.outputs / 'phase1_run_metadata.json').read_text(encoding='utf-8'))
 
     def notebook_cells(self) -> list[dict]:
-        data = json.loads((self.folder / 'phase1_behavior_analysis.ipynb').read_text(encoding='utf-8'))
+        data = json.loads(self.notebook_path.read_text(encoding='utf-8'))
         return [{'index': index, 'markdown': ''.join(cell['source'])}
                 for index, cell in enumerate(data['cells']) if cell['cell_type'] == 'markdown']
 
     def prompts(self) -> str:
-        return (self.folder / 'AI_interaction_record_phase1.md').read_bytes().decode('utf-8')
+        return self.prompts_path.read_bytes().decode('utf-8')
 
     def table(self, name: str, *, offset: int = 0, limit: int = 100,
               user_id: int | None = None, genre: str | None = None) -> dict:
@@ -115,7 +117,7 @@ class NotebookResearch:
         if hypothesis not in ('h1', 'h4', 'h5'):
             raise ValueError('Not a notebook-backed hypothesis')
         if not self.available:
-            raise FileNotFoundError('Notebook source or original CSV exports are missing')
+            raise FileNotFoundError('Saved CSV exports or run metadata are missing')
         views = {'notebook_source': True}
         if hypothesis == 'h1':
             views['genre_share'] = self._all('genre_share_summary')
@@ -283,13 +285,13 @@ class NotebookResearch:
 
     def manifest(self) -> dict:
         if not self.available:
-            return {'available': False, 'message': 'Original notebook or one or more CSV exports missing'}
+            return {'available': False, 'message': 'Saved CSV exports or run metadata are missing'}
         summary = {
             'available': True, 'source': 'research/phase1/ai_pair',
             'metadata': self.metadata(), 'tables': sorted(TABLES),
             'figures': sorted(p.name for p in self.outputs.glob('*.png')),
-            'note_cells': [cell['index'] for cell in self.notebook_cells()],
-            'prompts': 'AI_interaction_record_phase1.md',
+            'note_cells': [cell['index'] for cell in self.notebook_cells()] if self.notebook_path.is_file() else [],
+            'prompts': self.prompts_path.relative_to(self.project_root).as_posix(),
             'hypotheses': ['h1', 'h4', 'h5'],
         }
         with (self.outputs / 'visible_latest_timestamp_tie_size.csv').open(encoding='utf-8', newline='') as file:

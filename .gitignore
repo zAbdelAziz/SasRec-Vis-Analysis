@@ -39,3 +39,19 @@ coverage/
 !.env.example
 !.env.sample
 !.env.template
+
+# CSV data and images (already tracked research assets remain versioned)
+*.[cC][sS][vV]
+*.[pP][nN][gG]
+*.[jJ][pP][gG]
+*.[jJ][pP][eE][gG]
+*.[gG][iI][fF]
+*.[wW][eE][bB][pP]
+*.[sS][vV][gG]
+*.[iI][cC][oO]
+*.[bB][mM][pP]
+*.[tT][iI][fF]
+*.[tT][iI][fF][fF]
+*.[aA][vV][iI][fF]
+*.[hH][eE][iI][cC]
+*.[hH][eE][iI][fF]

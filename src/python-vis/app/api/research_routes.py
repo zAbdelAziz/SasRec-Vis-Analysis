@@ -23,8 +23,8 @@ def notebook_manifest(request: Request):
 @router.get('/phase1/pair-b/notebook/notes')
 def notebook_notes(request: Request):
     notebook = source(request)
-    if not notebook.available:
-        raise HTTPException(status_code=404, detail='Original notebook files are missing')
+    if not notebook.notebook_path.is_file():
+        raise HTTPException(status_code=404, detail='Original notebook file is missing')
     return {'source': 'research/phase1/ai_pair/phase1_behavior_analysis.ipynb',
             'cells': notebook.notebook_cells()}
 
@@ -32,9 +32,9 @@ def notebook_notes(request: Request):
 @router.get('/phase1/pair-b/prompts')
 def notebook_prompts(request: Request):
     notebook = source(request)
-    if not notebook.available:
-        raise HTTPException(status_code=404, detail='Original notebook files are missing')
-    return {'source': 'research/phase1/ai_pair/AI_interaction_record_phase1.md',
+    if not notebook.prompts_path.is_file():
+        raise HTTPException(status_code=404, detail='Phase I prompt record is missing')
+    return {'source': notebook.prompts_path.relative_to(notebook.project_root).as_posix(),
             'markdown': notebook.prompts()}
 
 
