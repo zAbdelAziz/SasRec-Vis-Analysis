@@ -66,4 +66,4 @@ npm run test:python
 npm run build
 ```
 
-The installation workflow in `.github/workflows/portability.yml` installs dependencies from scratch on Linux, macOS, and Windows with Python 3.11 and 3.14 and Node 22.12. It tests saved Pair B results, user details, figures, notes, and prompts without model assets or generated runs, including a relocated installation path with spaces and Unicode. CI results must pass before claiming a release works on those platforms. Full model reruns require the separate assets above and are not exercised by this smoke test.
+The local tests cover saved Pair B results, user details, figures, notes, and prompts without model assets or generated runs, including an installation path with spaces and Unicode. Full model reruns require the separate assets above and are not exercised by these tests.
