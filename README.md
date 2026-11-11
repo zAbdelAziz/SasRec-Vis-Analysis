@@ -1,4 +1,4 @@
-# SASRec Visual Analytics - H1–H5
+# SASRec Visual Analytics - Cosmic Mirage Group
 
 React + FastAPI visual analytics for MovieLens-1M and a trained SASRec checkpoint. Pair A covers `h1`, `h2`, and `h3` in behavioral **research Phase I** and internal-model **research Phase II**. Pair B covers `h1`, `h4`, and `h5` in Phase I. The application never fabricates model outputs to fill missing results.
 
@@ -49,6 +49,8 @@ Open `http://localhost:5173`. The API is at `http://localhost:8000/docs`. For th
 | **H1** (`h1`) | Historical vs recommended genre shares | Distance-matched shared-genre attention; directional non-self genre-pair attention; chronological example |
 | **H2** (`h2`) | Mean release-year shifts, and decade mixes for history/recommendations/catalog | Cosine alignment of final contextual user state with candidate movie embeddings by decade; candidate-weighted ranking-score advantage |
 | **H3** (`h3`) | Genre amplification by age and gender | Post-hoc genre reference alignment from learned vectors; actual final-query causal attention to historical genres; age/gender user-level bootstrap intervals; linked, same-cohort Phase I comparison. |
+| **H4** (`4`) | Popularity exposure |  |
+| **H4** (`5`) | Timestep order sensitivity |  |
 
 ## Using the app
 
